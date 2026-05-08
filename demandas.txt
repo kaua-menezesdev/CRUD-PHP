@@ -1,0 +1,19 @@
+# MELHORIAS
+
+Suba esse repositorio pro Github!
+
+Index
+
+1. Preciso que tenha apenas a listagem de usuários em tabela com filtro por nome e email (GridJS e Datatables).
+2. Ter um botão de ação para cadastrar um novo registro.
+3. Utilize Bootstrap e jquery (Pesquise SweetAlert)
+4. As validações dos campos hoje é feita apenas no input, utilize javascript.
+
+Editar / Criar
+
+Use a mesma estrutura (pagina unica do formulário);
+
+Excluir
+
+Adicione um alerta quando clicar em excluir "tem certeza que deseja remover esse registro?"
+
