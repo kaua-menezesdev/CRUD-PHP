@@ -1,19 +1,9 @@
 <?php
-
 include 'conexao.php';
 
-$id = $_GET['id'];
+$id = $_POST['id'];
 
-$sql = $db->prepare("
-    DELETE FROM usuarios
-    WHERE id = :id
-");
+$stmt = $db->prepare("DELETE FROM usuarios WHERE id = ?");
+$stmt->execute([$id]);
 
-$sql->bindValue(':id', $id);
-
-$sql->execute();
-
-header('Location: index.php');
-
-
-exit;
+echo "ok";

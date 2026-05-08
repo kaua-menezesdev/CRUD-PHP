@@ -2,127 +2,110 @@
 
 include 'conexao.php';
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
-    $nome = $_POST['nome'];
-    $email = $_POST['email'];
-
-    $sql = $db->prepare("
-    
-        INSERT INTO usuarios (nome, email)
-        VALUES (:nome, :email)
-    
-    ");
-
-    $sql->bindValue(':nome', $nome);
-    $sql->bindValue(':email', $email);
-
-    $sql->execute();
-
-    header('Location: index.php');
-    exit;
-}
-
 $usuarios = $db->query("
-    SELECT * FROM usuarios
-    ORDER BY id DESC
+    SELECT * FROM usuarios ORDER BY id DESC
 ")->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
-
 <!DOCTYPE html>
 <html lang="pt-br">
 
 <head>
-
     <meta charset="UTF-8">
-
+    <title>CRUD PHP</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>CRUD PHP</title>
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <link rel="stylesheet" href="style.css">
-
+    <!-- DataTables Bootstrap 5 -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
 </head>
 
-<body>
+<body class="bg-light">
 
-<div class="container">
+<div class="container mt-5">
 
-    <h1>CRUD PHP + SQLite</h1>
+    <h3 class="mb-4">CRUD PHP + SQLite</h3>
 
-    <form method="POST">
+    <button class="btn btn-primary mb-3" id="btnNovo">
+        + Novo Registro
+    </button>
 
-        <input
-            type="text"
-            name="nome"
-            placeholder="Digite o nome"
-            required
-        >
+    <!-- FORM -->
+    <div class="card p-3 mb-3" id="formCard" style="display:none;">
+        <form id="formUsuario">
 
-        <input
-            type="email"
-            name="email"
-            placeholder="Digite o email"
-            required
-        >
+            <input type="hidden" id="id">
 
-        <button type="submit">
-            Cadastrar
-        </button>
+            <input type="text" id="nome" class="form-control mb-2" placeholder="Nome">
+            <input type="email" id="email" class="form-control mb-2" placeholder="Email">
 
-    </form>
+            <button class="btn btn-success">Salvar</button>
 
-    <table>
+        </form>
+    </div>
 
-        <tr>
+    <!-- TABELA -->
+    <table id="tabela" class="table table-striped table-bordered">
 
-            <th>ID</th>
-            <th>Nome</th>
-            <th>Email</th>
-            <th>Ações</th>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
 
-        </tr>
+        <tbody>
 
-        <?php foreach($usuarios as $usuario): ?>
+        <?php foreach ($usuarios as $u): ?>
 
-        <tr>
+            <tr>
+                <td><?= $u['id'] ?></td>
 
-            <td><?= $usuario['id'] ?></td>
+                <td><?= htmlspecialchars($u['nome']) ?></td>
 
-            <td><?= $usuario['nome'] ?></td>
+                <td><?= htmlspecialchars($u['email']) ?></td>
 
-            <td><?= $usuario['email'] ?></td>
+                <td>
 
-            <td>
+                    <button class="btn btn-warning btn-sm editar"
+                        data-id="<?= $u['id'] ?>"
+                        data-nome="<?= htmlspecialchars($u['nome'], ENT_QUOTES) ?>"
+                        data-email="<?= htmlspecialchars($u['email'], ENT_QUOTES) ?>">
+                        Editar
+                    </button>
 
-                <a
-                    class="editar"
-                    href="editar.php?id=<?= $usuario['id'] ?>"
-                >
-                    Editar
-                </a>
+                    <button class="btn btn-danger btn-sm excluir"
+                        data-id="<?= $u['id'] ?>">
+                        Excluir
+                    </button>
 
-                <a
-                    class="excluir"
-                    href="excluir.php?id=<?= $usuario['id'] ?>"
-                    onclick="return confirm('Temn certeza que deseja excluir esse usário?')"
-                >
-                    Excluir
-                </a>
-
-    
-
-            </td>
-
-        </tr>
+                </td>
+            </tr>
 
         <?php endforeach; ?>
+
+        </tbody>
 
     </table>
 
 </div>
 
-</body>
+<!-- JS -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- DataTables -->
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+<script src="script.js"></script>
+
+</body>
 </html>
